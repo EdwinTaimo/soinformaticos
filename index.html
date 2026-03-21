@@ -2,17 +2,62 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Meu Universo Digital</title>
+    <title>Avisos de Aulas</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #121212; color: white; margin: 0; }
-        .container { text-align: center; border: 2px solid #00ff88; padding: 50px; border-radius: 20px; }
-        h1 { color: #00ff88; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; max-width: 600px; margin: 20px auto; }
+        h1 { color: #1a73e8; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        .status-confirmado { color: green; font-weight: bold; }
+        .status-cancelado { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>O Início de Algo Ambicioso</h1>
-        <p>Este site está vivo e ninguém pode alterá-lo além de mim.</p>
+
+    <div class="card">
+        <h1>Status das Aulas</h1>
+        <p>Informações atualizadas em tempo real.</p>
+        <table id="tabela-aulas">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Cadeira</th>
+                    <th>Docente</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
     </div>
+
+    <script>
+        // COLA AQUI O LINK DO TEU CSV QUE COPIASTE DO GOOGLE SHEETS
+        const urlPlanilha = https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv;
+
+        async function carregarDados() {
+            const resposta = await fetch(urlPlanilha);
+            const dados = await resposta.text();
+            const linhas = dados.split("\n").slice(1); // Ignora o cabeçalho
+            const corpoTabela = document.querySelector("#tabela-aulas tbody");
+
+            linhas.forEach(linha => {
+                const colunas = linha.split(",");
+                if(colunas.length >= 4) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${colunas[0]}</td>
+                        <td>${colunas[1]}</td>
+                        <td>${colunas[2]}</td>
+                        <td class="${colunas[3].includes('Não') ? 'status-cancelado' : 'status-confirmado'}">${colunas[3]}</td>
+                    `;
+                    corpoTabela.appendChild(tr);
+                }
+            });
+        }
+
+        carregarDados();
+    </script>
 </body>
 </html>
