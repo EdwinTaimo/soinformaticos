@@ -1,191 +1,28 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT 2 ANO | Admin Panel</title>
-    <link rel="apple-touch-icon" href="icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <style>
-        :root {
-            --discord-dark: #2f3136;
-            --terminal-green: #00ff41;
-            --terminal-bg: #0c0c0c;
-        }
+function carregarAdmin() {
+    fetch('data.csv')
+        .then(response => response.text())
+        .then(data => {
+            const rows = data.split('\n');
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = ''; // Clear existing data
 
-        body { 
-            background-color: var(--terminal-bg); 
-            color: var(--terminal-green); 
-            font-family: 'Courier New', Courier, monospace; 
-            margin: 0; 
-            padding: 20px;
-            text-transform: lowercase; /* Estética de terminal */
-        }
+            rows.forEach(row => {
+                const cols = row.split(',');
+                const newRow = document.createElement('tr');
 
-        .terminal-window {
-            border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            max-width: 800px;
-            margin: auto;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .terminal-header {
-            background: #333;
-            padding: 5px 15px;
-            color: #bbb;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .header-content {
-            padding: 20px;
-            border-bottom: 1px solid #333;
-        }
-
-        .sudo-text { color: #fff; font-weight: bold; }
-        .prompt { color: var(--terminal-green); margin-right: 10px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; padding: 10px; border-bottom: 2px solid #333; color: #888; font-size: 12px; }
-        td { padding: 12px 10px; border-bottom: 1px solid #222; }
-
-        /* Botões Estilo "Sudo" */
-        .btn-action {
-            background: transparent;
-            border: 1px solid var(--terminal-green);
-            color: var(--terminal-green);
-            padding: 5px 10px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-
-        .btn-action:hover {
-            background: var(--terminal-green);
-            color: #000;
-        }
-
-        .status-on { color: #3ba55c; }
-        .status-off { color: #ed4245; }
-
-        /* Efeito de Scanline (Opcional) */
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 65, 0.05);
-            position: fixed;
-            top: 0;
-            z-index: 10;
-            animation: scan 4s linear infinite;
-        }
-        @keyframes scan { from { top: 0; } to { top: 100%; } }
-    </style>
-</head>
-<body>
-    <div class="scanline"></div>
-    
-    <div class="terminal-window">
-        <div class="terminal-header">
-            <span>bash — 80x24</span>
-            <span>ssh root@soinformaticos</span>
-        </div>
-
-        <div class="header-content">
-            <p><span class="prompt">root@system:~$</span> <span class="sudo-text">sudo access --control-panel</span></p>
-            <p style="color: #888; font-size: 12px;">last login: Sun Mar 22 20:26:03 on ttys001</p>
-        </div>
-
-        <table id="tabela-admin">
-            <thead>
-                <tr>
-                    <th>cadeira</th>
-                    <th>status atual</th>
-                    <th>ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-    </div>
-
-    <script>
-        const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv"; // O mesmo do index.html
-        const URL_API = "https://script.google.com/macros/s/AKfycbzDYTIJ3NwFvlqM5-KWEYC7hTRvACjmVDxdCGh4W28U9emVLE_SdJeJlfiXxKP_e4to/exec"; // O que termina em /exec
-        const SENHA_MESTRA = "2026";
-
-        async function carregarAdmin() {
-            try {
-                const res = await fetch(URL_CSV);
-                const data = await res.text();
-                const rows = data.split("\n").slice(1);
-                const tbody = document.querySelector("#tabela-admin tbody");
-                tbody.innerHTML = "";
-
-               // Adiciona o 'this' como terceiro argumento
-<button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed}, this)">
-    ./execute --toggle
-</button>
-                        
-                        const tr = document.createElement("tr");
-                        tr.innerHTML = `
-                            <td>${cadeira}</td>
-                            <td class="${isConfirmed ? 'status-on' : 'status-off'}">
-                                ${isConfirmed ? '[confirmada]' : '[pendente]'}
-                            </td>
-                            <td>
-                                <button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed})">
-                                    ./execute --toggle
-                                </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    }
+                cols.forEach(col => {
+                    const newCol = document.createElement('td');
+                    newCol.textContent = col;
+                    newRow.appendChild(newCol);
                 });
-            } catch (e) { console.error("Erro ao carregar terminal."); }
-        }
+                const actionCol = document.createElement('td');
+                const button = document.createElement('button');
+                button.textContent = 'Action';
+                actionCol.appendChild(button);
+                newRow.appendChild(actionCol);
 
-        async function toggleStatus(nome, statusAtual, elementoBotao) {
-    const pass = prompt("Enter sudo password:");
-    if(pass !== SENHA_MESTRA) return alert("Permission denied.");
-
-    // 1. FEEDBACK VISUAL IMEDIATO (Antes do Fetch)
-    const novoStatus = !statusAtual;
-    const linha = elementoBotao.closest('tr');
-    const celulaStatus = linha.querySelector('td:nth-child(2)'); // A célula do [pendente/confirmada]
-
-    // Mudança "Falsa" instantânea para dar sensação de velocidade
-    celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
-    celulaStatus.className = novoStatus ? "status-on" : "status-off";
-    elementoBotao.innerText = "./processing...";
-    elementoBotao.style.borderColor = "#ffaa00"; // Cor de alerta/processamento
-
-    try {
-        // 2. ENVIO REAL PARA O GOOGLE
-        await fetch(URL_API, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
-        });
-        
-        // 3. CONFIRMAÇÃO FINAL
-        elementoBotao.innerText = "./success";
-        elementoBotao.style.borderColor = "var(--terminal-green)";
-        
-        // Recarrega os dados reais após 2 segundos para garantir sincronia
-        setTimeout(carregarAdmin, 2000);
-
-    } catch (err) {
-        alert("CRITICAL ERROR: Connection failed.");
-        carregarAdmin(); // Reverte para o estado real em caso de erro
-    }
+                tableBody.appendChild(newRow);
+            });
+        })
+        .catch(error => console.error('Error:', error));
 }
-
-        carregarAdmin();
-    </script>
-</body>
-</html>
