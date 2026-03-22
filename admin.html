@@ -1,28 +1,102 @@
-function carregarAdmin() {
-    fetch('data.csv')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n');
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = ''; // Clear existing data
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudo Admin |  ET</title>
+    <style>
+        /* Estilo Hacker/Discord */
+        body { background-color: #0c0c0c; color: #00ff41; font-family: monospace; padding: 20px; }
+        .status-on { color: #3ba55c; font-weight: bold; }
+        .status-off { color: #ed4245; font-weight: bold; }
+        .btn-action { 
+            background: transparent; border: 1px solid #00ff41; color: #00ff41; 
+            padding: 5px; cursor: pointer; margin: 5px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td, th { padding: 10px; border-bottom: 1px solid #333; }
+    </style>
+</head>
+<body>
 
-            rows.forEach(row => {
-                const cols = row.split(',');
-                const newRow = document.createElement('tr');
+    <h2>root@system:~$ sudo manage-classes</h2>
 
-                cols.forEach(col => {
-                    const newCol = document.createElement('td');
-                    newCol.textContent = col;
-                    newRow.appendChild(newCol);
+    <table>
+        <thead>
+            <tr>
+                <th>Cadeira</th>
+                <th>Status</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            </tbody>
+    </table>
+
+    <script>
+        const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv'; // Ajuste para o seu link real do Google
+        const URL_API = 'https://script.google.com/macros/s/AKfycbyduueNOzF22dM7lJJ0sNrmSeSySsEGWQmwDtlDxYbukdlUWtubBnr3QgmQQ2rnBnTG/exec'; 
+        const SENHA_MESTRA = "2026"; 
+
+        async function carregarAdmin() {
+            try {
+                const response = await fetch(URL_CSV + "?cache=" + new Date().getTime());
+                const data = await response.text();
+                const rows = data.split('\n').slice(1);
+                const tableBody = document.getElementById('table-body');
+                tableBody.innerHTML = "";
+
+                rows.forEach(row => {
+                    const cols = row.split(',');
+                    if (cols.length >= 4 && cols[1]) {
+                        const cadeira = cols[1].replace(/"/g, "").trim();
+                        const isConfirmed = cols[3].trim().toUpperCase() === "TRUE";
+                        
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${cadeira}</td>
+                            <td class="${isConfirmed ? 'status-on' : 'status-off'}">
+                                ${isConfirmed ? '[confirmada]' : '[pendente]'}
+                            </td>
+                            <td>
+                                <button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed}, this)">
+                                    ./execute --toggle
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(newRow);
+                    }
                 });
-                const actionCol = document.createElement('td');
-                const button = document.createElement('button');
-                button.textContent = 'Action';
-                actionCol.appendChild(button);
-                newRow.appendChild(actionCol);
+            } catch(error) { console.error('Error:', error); }
+        }
 
-                tableBody.appendChild(newRow);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
+        async function toggleStatus(nome, statusAtual, elementoBotao) {
+            const pass = prompt("Sudo password:");
+            if(pass !== SENHA_MESTRA) return alert("Wrong password.");
+
+            const novoStatus = !statusAtual;
+            
+            // --- ANIMAÇÃO INSTANTÂNEA ---
+            const celulaStatus = elementoBotao.parentElement.previousElementSibling;
+            celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
+            celulaStatus.className = novoStatus ? "status-on" : "status-off";
+            elementoBotao.innerText = "./processing...";
+
+            try {
+                await fetch(URL_API, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
+                });
+                elementoBotao.innerText = "./success";
+                setTimeout(carregarAdmin, 1500); 
+            } catch (err) {
+                alert("Fail!");
+                carregarAdmin();
+            }
+        }
+
+        carregarAdmin();
+    </script>
+</body>
+</html>
