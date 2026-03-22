@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    
     <meta charset="UTF-8">
     <title> Aulas 2⁰ ANO | ET </title>
     <style>
@@ -148,6 +153,42 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #2e3338; }
         ::-webkit-scrollbar-thumb { background: #202225; border-radius: 10px; }
+
+
+        /* Ajustes para Mobile */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Menos margem nas bordas */
+    }
+
+    h1 {
+        font-size: 20px; /* Título menor para caber num telemóvel */
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        font-size: 14px; /* Tamanho de letra ideal para ler sem zoom */
+    }
+
+    th, td {
+        padding: 10px 5px; /* Reduz o espaço interno para caber mais texto */
+    }
+
+    /* Esconder colunas menos importantes no mobile se necessário */
+    .col-docente {
+        display: none; /* Exemplo: se a tabela for muito larga, podemos esconder o nome do prof */
+    }
+
+    #btn-refresh {
+        width: 100%; /* Botão grande e fácil de clicar com o polegar */
+        padding: 15px;
+        font-size: 16px;
+    }
+}
+
+
+        
     </style>
     
     <link rel="manifest" href="manifest.json">
@@ -233,15 +274,14 @@ window.onload = updateTimestamp;
             </thead>
             <tbody>
                 </tbody>
-        </table>
-    </div>
-
-    <div class="header-actions">
+  </table>
+  
+ <div class="header-actions" style="justify-content: center; margin-top: 30px; flex-direction: column;">
     <button id="btn-refresh" onclick="refreshData()">
         <span id="icon-sync">🔄</span> Atualizar Status
     </button>
-    <span id="last-update">Atualizado agora</span>
-</div>
+    <span id="last-update" style="margin-top: 10px;">Atualizado agora</span>       
+ </div>
 
     
     <script>
