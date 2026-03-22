@@ -126,11 +126,10 @@
                 const tbody = document.querySelector("#tabela-admin tbody");
                 tbody.innerHTML = "";
 
-                rows.forEach(row => {
-                    const cols = row.split(",");
-                    if(cols.length >= 4 && cols[1]) {
-                        const cadeira = cols[1].replace(/"/g, "");
-                        const isConfirmed = cols[3].trim().toUpperCase() === "TRUE";
+               // Adiciona o 'this' como terceiro argumento
+<button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed}, this)">
+    ./execute --toggle
+</button>
                         
                         const tr = document.createElement("tr");
                         tr.innerHTML = `
@@ -150,28 +149,41 @@
             } catch (e) { console.error("Erro ao carregar terminal."); }
         }
 
-        async function toggleStatus(nome, statusAtual) {
-            const pass = prompt("Enter sudo password:");
-            if(pass !== SENHA_MESTRA) return alert("Permission denied (publickey).");
+        async function toggleStatus(nome, statusAtual, elementoBotao) {
+    const pass = prompt("Enter sudo password:");
+    if(pass !== SENHA_MESTRA) return alert("Permission denied.");
 
-            const novoStatus = !statusAtual;
-            
-            // Feedback visual imediato
-            console.log(`sending request to update ${nome}...`);
+    // 1. FEEDBACK VISUAL IMEDIATO (Antes do Fetch)
+    const novoStatus = !statusAtual;
+    const linha = elementoBotao.closest('tr');
+    const celulaStatus = linha.querySelector('td:nth-child(2)'); // A célula do [pendente/confirmada]
 
-            try {
-                const response = await fetch(URL_API, {
-                    method: 'POST',
-                    mode: 'no-cors', // Importante para o Apps Script
-                    body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
-                });
-                
-                alert("command executed: success");
-                setTimeout(carregarAdmin, 1000); // Recarrega após 1s
-            } catch (err) {
-                alert("critical error in connection");
-            }
-        }
+    // Mudança "Falsa" instantânea para dar sensação de velocidade
+    celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
+    celulaStatus.className = novoStatus ? "status-on" : "status-off";
+    elementoBotao.innerText = "./processing...";
+    elementoBotao.style.borderColor = "#ffaa00"; // Cor de alerta/processamento
+
+    try {
+        // 2. ENVIO REAL PARA O GOOGLE
+        await fetch(URL_API, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
+        });
+        
+        // 3. CONFIRMAÇÃO FINAL
+        elementoBotao.innerText = "./success";
+        elementoBotao.style.borderColor = "var(--terminal-green)";
+        
+        // Recarrega os dados reais após 2 segundos para garantir sincronia
+        setTimeout(carregarAdmin, 2000);
+
+    } catch (err) {
+        alert("CRITICAL ERROR: Connection failed.");
+        carregarAdmin(); // Reverte para o estado real em caso de erro
+    }
+}
 
         carregarAdmin();
     </script>
