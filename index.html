@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <title>Avisos de Aulas</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; max-width: 600px; margin: 20px auto; }
-        h1 { color: #1a73e8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        .status-confirmado { color: green; font-weight: bold; }
-        .status-cancelado { color: red; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .card { background: white; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 30px; max-width: 900px; margin: 20px auto; border-top: 8px solid #1a73e8; }
+        h1 { color: #1a73e8; margin-bottom: 5px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #f8f9fa; padding: 15px; text-align: left; border-bottom: 2px solid #dee2e6; color: #555; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        
+        /* Badges de Status com as tuas novas cores */
+        .status-badge { padding: 8px 15px; border-radius: 20px; font-size: 0.85em; font-weight: bold; display: inline-block; min-width: 100px; text-align: center; }
+        .confirmada { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .por-confirmar { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        strong { color: #2c3e50; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h1>Status das Aulas</h1>
-        <p>Informações atualizadas em tempo real.</p>
+        <p class="subtitle">Selecionei as checkboxes na planilha para atualizar aqui</p>
+        
         <table id="tabela-aulas">
             <thead>
                 <tr>
@@ -33,31 +41,46 @@
     </div>
 
     <script>
-        // COLA AQUI O LINK DO TEU CSV QUE COPIASTE DO GOOGLE SHEETS
-        const urlPlanilha = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv" ;
+        // Lembra-te de colocar o teu link CSV aqui
+        const urlPlanilha = "TEU_LINK_DO_CSV_AQUI";
 
         async function carregarDados() {
-            const resposta = await fetch(urlPlanilha);
-            const dados = await resposta.text();
-            const linhas = dados.split("\n").slice(1); // Ignora o cabeçalho
-            const corpoTabela = document.querySelector("#tabela-aulas tbody");
+            try {
+                const resposta = await fetch(urlPlanilha);
+                const dados = await resposta.text();
+                const linhas = dados.split("\n").slice(1); 
+                const corpoTabela = document.querySelector("#tabela-aulas tbody");
+                corpoTabela.innerHTML = ""; 
 
-            linhas.forEach(linha => {
-                const colunas = linha.split(",");
-                if(colunas.length >= 4) {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${colunas[0]}</td>
-                        <td>${colunas[1]}</td>
-                        <td>${colunas[2]}</td>
-                        <td class="${colunas[3].includes('Não') ? 'status-cancelado' : 'status-confirmado'}">${colunas[3]}</td>
-                    `;
-                    corpoTabela.appendChild(tr);
-                }
-            });
+                linhas.forEach(linha => {
+                    const colunas = linha.split(",");
+                    // Verificamos se a linha tem dados (coluna da Cadeira não vazia)
+                    if(colunas.length >= 4 && colunas[1].trim() !== "") {
+                        const tr = document.createElement("tr");
+                        
+                        // Lógica da Checkbox: No CSV, marcado = TRUE, desmarcado = FALSE
+                        const isChecked = colunas[3].trim().toUpperCase() === "TRUE";
+                        
+                        const textoStatus = isChecked ? "Confirmada" : "Por Confirmar";
+                        const classeStatus = isChecked ? "confirmada" : "por-confirmar";
+
+                        tr.innerHTML = `
+                            <td>${colunas[0]}</td>
+                            <td><strong>${colunas[1]}</strong></td>
+                            <td>${colunas[2]}</td>
+                            <td><span class="status-badge ${classeStatus}">${textoStatus}</span></td>
+                        `;
+                        corpoTabela.appendChild(tr);
+                    }
+                });
+            } catch (erro) {
+                console.error("Erro ao conectar à planilha:", erro);
+            }
         }
 
         carregarDados();
+        // Atualiza a cada 1 minuto para ser quase "em tempo real"
+        setInterval(carregarDados, 60000);
     </script>
 </body>
 </html>
