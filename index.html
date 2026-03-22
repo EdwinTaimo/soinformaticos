@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <title> Aulas 2⁰ ANO | ET </title>
     <style>
+
+        .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+#btn-refresh {
+    background-color: #5865f2; /* Blurple do Discord */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 13px;
+}
+
+#btn-refresh:hover {
+    background-color: #4752c4;
+}
+
+#btn-refresh:active {
+    background-color: #3c45a5;
+}
+
+#last-update {
+    font-size: 12px;
+    color: #8e9297;
+}
+
+/* Animação de rotação */
+.spinning {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+        
         body { 
             font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
             background-color: #36393f; 
@@ -128,6 +173,40 @@
       gtag('js', new Date());
 
       gtag('config', 'G-ECVJGWJ7G1');
+
+
+        function updateTimestamp() {
+    const agora = new Date();
+    const hora = agora.getHours().toString().padStart(2, '0');
+    const min = agora.getMinutes().toString().padStart(2, '0');
+    document.getElementById('last-update').innerText = `Última verificação: ${hora}:${min}`;
+}
+
+async function refreshData() {
+    const btn = document.getElementById('btn-refresh');
+    const icon = document.getElementById('icon-sync');
+    
+    // Inicia animação e desativa botão
+    btn.disabled = true;
+    icon.classList.add('spinning');
+    btn.style.opacity = "0.7";
+
+    await carregarDados(); // Chama a tua função que já existe
+    
+    // Para animação após 1 segundo (para dar feedback visual)
+    setTimeout(() => {
+        icon.classList.remove('spinning');
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        updateTimestamp();
+    }, 800);
+}
+
+// Chamar o timestamp na primeira carga
+window.onload = updateTimestamp;
+
+
+        
     </script>
 
     <meta charset="UTF-8">
@@ -157,6 +236,14 @@
         </table>
     </div>
 
+    <div class="header-actions">
+    <button id="btn-refresh" onclick="refreshData()">
+        <span id="icon-sync">🔄</span> Atualizar Status
+    </button>
+    <span id="last-update">Atualizado agora</span>
+</div>
+
+    
     <script>
         // Substitui pelo teu link CSV real
         const urlPlanilha = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv";
