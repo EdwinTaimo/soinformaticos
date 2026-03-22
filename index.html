@@ -187,7 +187,41 @@
     }
 }
 
+.contato-chefe {
+    position: fixed;
+    bottom: 80px; /* Fica acima do botão de refresh se necessário */
+    right: 20px;
+    z-index: 1000;
+}
 
+.btn-ligar {
+    background-color: #3ba55c; /* Verde Discord */
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-ligar:active {
+    transform: scale(0.95);
+    background-color: #2d7d44;
+}
+
+@media (max-width: 600px) {
+    .text-ligar { display: none; } /* No mobile pequeno mostra apenas o ícone para não tapar a tabela */
+    .btn-ligar {
+        padding: 15px;
+        border-radius: 50%;
+    }
+}
+
+        
         
     </style>
     
@@ -324,5 +358,13 @@ window.onload = updateTimestamp;
         carregarDados();
         setInterval(carregarDados, 15000); // Atualiza a cada 15 sec
     </script>
+
+<div class="contato-chefe">
+    <a href="tel:+258833973761" class="btn-ligar">
+        <span class="icon-fone">📞</span> 
+        <span class="text-ligar">Ligar ao Chefe</span>
+    </a>
+</div>
+        
 </body>
 </html>
