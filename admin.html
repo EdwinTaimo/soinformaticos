@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudo Terminal | Admin Panel</title>
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        :root {
+            --discord-dark: #2f3136;
+            --terminal-green: #00ff41;
+            --terminal-bg: #0c0c0c;
+        }
+
+        body { 
+            background-color: var(--terminal-bg); 
+            color: var(--terminal-green); 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 20px;
+            text-transform: lowercase; /* Estética de terminal */
+        }
+
+        .terminal-window {
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            max-width: 800px;
+            margin: auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #333;
+            padding: 5px 15px;
+            color: #bbb;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .sudo-text { color: #fff; font-weight: bold; }
+        .prompt { color: var(--terminal-green); margin-right: 10px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 10px; border-bottom: 2px solid #333; color: #888; font-size: 12px; }
+        td { padding: 12px 10px; border-bottom: 1px solid #222; }
+
+        /* Botões Estilo "Sudo" */
+        .btn-action {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            background: var(--terminal-green);
+            color: #000;
+        }
+
+        .status-on { color: #3ba55c; }
+        .status-off { color: #ed4245; }
+
+        /* Efeito de Scanline (Opcional) */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 65, 0.05);
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span>bash — 80x24</span>
+            <span>ssh root@soinformaticos</span>
+        </div>
+
+        <div class="header-content">
+            <p><span class="prompt">root@system:~$</span> <span class="sudo-text">sudo access --control-panel</span></p>
+            <p style="color: #888; font-size: 12px;">last login: Sun Mar 22 20:26:03 on ttys001</p>
+        </div>
+
+        <table id="tabela-admin">
+            <thead>
+                <tr>
+                    <th>cadeira</th>
+                    <th>status atual</th>
+                    <th>ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        const URL_CSV = "TEU_LINK_CSV_AQUI"; // O mesmo do index.html
+        const URL_API = "TEU_LINK_APPS_SCRIPT_EXEC"; // O que termina em /exec
+        const SENHA_MESTRA = "sua_senha_aqui";
+
+        async function carregarAdmin() {
+            try {
+                const res = await fetch(URL_CSV);
+                const data = await res.text();
+                const rows = data.split("\n").slice(1);
+                const tbody = document.querySelector("#tabela-admin tbody");
+                tbody.innerHTML = "";
+
+                rows.forEach(row => {
+                    const cols = row.split(",");
+                    if(cols.length >= 4 && cols[1]) {
+                        const cadeira = cols[1].replace(/"/g, "");
+                        const isConfirmed = cols[3].trim().toUpperCase() === "TRUE";
+                        
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${cadeira}</td>
+                            <td class="${isConfirmed ? 'status-on' : 'status-off'}">
+                                ${isConfirmed ? '[confirmada]' : '[pendente]'}
+                            </td>
+                            <td>
+                                <button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed})">
+                                    ./execute --toggle
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                });
+            } catch (e) { console.error("Erro ao carregar terminal."); }
+        }
+
+        async function toggleStatus(nome, statusAtual) {
+            const pass = prompt("Enter sudo password:");
+            if(pass !== SENHA_MESTRA) return alert("Permission denied (publickey).");
+
+            const novoStatus = !statusAtual;
+            
+            // Feedback visual imediato
+            console.log(`sending request to update ${nome}...`);
+
+            try {
+                const response = await fetch(URL_API, {
+                    method: 'POST',
+                    mode: 'no-cors', // Importante para o Apps Script
+                    body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
+                });
+                
+                alert("command executed: success");
+                setTimeout(carregarAdmin, 1000); // Recarrega após 1s
+            } catch (err) {
+                alert("critical error in connection");
+            }
+        }
+
+        carregarAdmin();
+    </script>
+</body>
+</html>
