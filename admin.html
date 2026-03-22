@@ -2,59 +2,130 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudo Admin |  ET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sudo Terminal | Admin Panel</title>
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <style>
-        /* Estilo Hacker/Discord */
-        body { background-color: #0c0c0c; color: #00ff41; font-family: monospace; padding: 20px; }
-        .status-on { color: #3ba55c; font-weight: bold; }
-        .status-off { color: #ed4245; font-weight: bold; }
-        .btn-action { 
-            background: transparent; border: 1px solid #00ff41; color: #00ff41; 
-            padding: 5px; cursor: pointer; margin: 5px;
+        :root {
+            --terminal-green: #00ff41;
+            --terminal-bg: #0c0c0c;
         }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 10px; border-bottom: 1px solid #333; }
+
+        body { 
+            background-color: var(--terminal-bg); 
+            color: var(--terminal-green); 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        .terminal-window {
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            max-width: 800px;
+            margin: auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #333;
+            padding: 5px 15px;
+            color: #bbb;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-content {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .sudo-text { color: #fff; font-weight: bold; }
+        .prompt { color: var(--terminal-green); margin-right: 10px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 10px; border-bottom: 2px solid #333; color: #888; font-size: 12px; text-transform: lowercase; }
+        td { padding: 12px 10px; border-bottom: 1px solid #222; font-size: 14px; }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover { background: var(--terminal-green); color: #000; }
+        .status-on { color: #3ba55c; }
+        .status-off { color: #ed4245; }
+
+        .scanline {
+            width: 100%; height: 2px;
+            background: rgba(0, 255, 65, 0.05);
+            position: fixed; top: 0; z-index: 10;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scan { from { top: 0; } to { top: 100%; } }
     </style>
 </head>
 <body>
+    <div class="scanline"></div>
+    
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <span>bash — 80x24</span>
+            <span>ssh root@soinformaticos</span>
+        </div>
 
-    <h2>root@system:~$ sudo manage-classes</h2>
+        <div class="header-content">
+            <p><span class="prompt">root@system:~$</span> <span class="sudo-text">sudo access --control-panel</span></p>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Cadeira</th>
-                <th>Status</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody id="table-body">
-            </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>cadeira</th>
+                    <th>status atual</th>
+                    <th>ação</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                </tbody>
+        </table>
+    </div>
 
     <script>
-        const URL_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv"; // Ajuste para o seu link real do Google
-        const URL_API = "https://script.google.com/macros/s/AKfycbyduueNOzF22dM7lJJ0sNrmSeSySsEGWQmwDtlDxYbukdlUWtubBnr3QgmQQ2rnBnTG/exec"; 
+        const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv';
+        const URL_API = 'https://script.google.com/macros/s/AKfycbyduueNOzF22dM7lJJ0sNrmSeSySsEGWQmwDtlDxYbukdlUWtubBnr3QgmQQ2rnBnTG/exec'; 
         const SENHA_MESTRA = "2026"; 
 
         async function carregarAdmin() {
             try {
-                const response = await fetch(URL_CSV + "?cache=" + new Date().getTime());
+                const response = await fetch(URL_CSV + "&cache=" + new Date().getTime());
                 const data = await response.text();
-                const rows = data.split('\n').slice(1);
+                // Divide por linhas e remove vazias, ignorando o cabeçalho
+                const rows = data.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
                 const tableBody = document.getElementById('table-body');
                 tableBody.innerHTML = "";
 
                 rows.forEach(row => {
-                    const cols = row.split(',');
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (cols.length >= 4 && cols[1]) {
                         const cadeira = cols[1].replace(/"/g, "").trim();
                         const isConfirmed = cols[3].trim().toUpperCase() === "TRUE";
                         
-                        const newRow = document.createElement('tr');
-                        newRow.innerHTML = `
-                            <td>${cadeira}</td>
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${cadeira.toLowerCase()}</td>
                             <td class="${isConfirmed ? 'status-on' : 'status-off'}">
                                 ${isConfirmed ? '[confirmada]' : '[pendente]'}
                             </td>
@@ -64,23 +135,23 @@
                                 </button>
                             </td>
                         `;
-                        tableBody.appendChild(newRow);
+                        tableBody.appendChild(tr);
                     }
                 });
-            } catch(error) { console.error('Error:', error); }
+            } catch(e) { console.error("Erro no terminal:", e); }
         }
 
-        async function toggleStatus(nome, statusAtual, elementoBotao) {
+        async function toggleStatus(nome, statusAtual, btn) {
             const pass = prompt("Sudo password:");
-            if(pass !== SENHA_MESTRA) return alert("Wrong password.");
+            if(pass !== SENHA_MESTRA) return alert("Permission denied.");
 
             const novoStatus = !statusAtual;
             
-            // --- ANIMAÇÃO INSTANTÂNEA ---
-            const celulaStatus = elementoBotao.parentElement.previousElementSibling;
+            // FEEDBACK INSTANTÂNEO
+            const celulaStatus = btn.parentElement.previousElementSibling;
             celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
             celulaStatus.className = novoStatus ? "status-on" : "status-off";
-            elementoBotao.innerText = "./processing...";
+            btn.innerText = "./processing...";
 
             try {
                 await fetch(URL_API, {
@@ -88,10 +159,10 @@
                     mode: 'no-cors',
                     body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
                 });
-                elementoBotao.innerText = "./success";
+                btn.innerText = "./success";
                 setTimeout(carregarAdmin, 1500); 
             } catch (err) {
-                alert("Fail!");
+                alert("Critical failure.");
                 carregarAdmin();
             }
         }
