@@ -187,15 +187,17 @@
     }
 }
 
-.contato-chefe {
+.fab-container {
     position: fixed;
-    bottom: 80px; /* Fica acima do botão de refresh se necessário */
+    bottom: 30px; /* Distância do fundo */
     right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espaço entre os dois botões */
     z-index: 1000;
 }
 
-.btn-ligar {
-    background-color: #3ba55c; /* Verde Discord */
+.btn-contato {
     color: white;
     text-decoration: none;
     padding: 12px 20px;
@@ -204,20 +206,27 @@
     align-items: center;
     gap: 10px;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.2s, opacity 0.2s;
 }
 
-.btn-ligar:active {
-    transform: scale(0.95);
-    background-color: #2d7d44;
+/* Cores diferenciadas para não confundir */
+.btn-chefe { background-color: #3ba55c; }   /* Verde Discord */
+.btn-adjunta { background-color: #5865F2; } /* Azul Discord */
+
+.btn-contato:active {
+    transform: scale(0.9);
+    opacity: 0.8;
 }
 
 @media (max-width: 600px) {
-    .text-ligar { display: none; } /* No mobile pequeno mostra apenas o ícone para não tapar a tabela */
-    .btn-ligar {
+    .text-ligar { display: none; } /* No mobile mostra apenas os círculos com ícones */
+    .btn-contato {
         padding: 15px;
         border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        justify-content: center;
     }
 }
 
@@ -359,12 +368,17 @@ window.onload = updateTimestamp;
         setInterval(carregarDados, 15000); // Atualiza a cada 15 sec
     </script>
 
-<div class="contato-chefe">
-    <a href="tel:+258833973761" class="btn-ligar">
+<div class="fab-container">
+    <a href="tel:+258847243782" class="btn-contato btn-adjunta">
+        <span class="icon-fone">📞</span> 
+        <span class="text-ligar">Ligar à Adjunta</span>
+    </a>
+
+    <a href="tel:+258833973761" class="btn-contato btn-chefe">
         <span class="icon-fone">📞</span> 
         <span class="text-ligar">Ligar ao Chefe</span>
     </a>
-</div>
+</div> 
         
 </body>
 </html>
