@@ -105,7 +105,7 @@
 
     <script>
         const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv';
-        const URL_API = 'https://script.google.com/macros/s/AKfycbzId2pawzW0w_fSTuv77p9LutlcGiYmW-ff5ZMg7RM38u3p1jsTFE_NVirHr4k9uzeE/exec'; 
+        const URL_API = 'https://script.google.com/macros/s/AKfycbwrgkTv7XS82WCHRTYEB5CZJ0DrBgcPsu5ik_e_vPIaW_wsJ6b--4hFK59PVAZ061m9/exec'; 
         const SENHA_MESTRA = "2026"; 
 
         async function carregarAdmin() {
@@ -146,43 +146,36 @@
     if(pass !== SENHA_MESTRA) return alert("Permission denied.");
 
     const novoStatus = !statusAtual;
-    
-    // Feedback visual imediato
     const celulaStatus = btn.parentElement.previousElementSibling;
     celulaStatus.innerText = "./processing...";
     btn.disabled = true;
 
     try {
-        // Criamos os dados para enviar
-        const dados = {
-            cadeira: nome,
-            novoStatus: novoStatus
-        };
-
-        // Envio para o Google Apps Script
         await fetch(URL_API, {
             method: 'POST',
-            mode: 'no-cors', // Essencial para evitar erros de política do Google
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dados)
+            mode: 'no-cors', 
+            // Mudamos para text/plain para o Google não bloquear o pre-flight CORS
+            headers: { 'Content-Type': 'text/plain' }, 
+            body: JSON.stringify({
+                cadeira: nome,
+                novoStatus: novoStatus
+            })
         });
 
-        // Sucesso visual
-        btn.innerText = "./done";
-        celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
-        celulaStatus.className = novoStatus ? "status-on" : "status-off";
-        
-        // Recarrega a tabela após 2 segundos para confirmar
+        // Como o modo é 'no-cors', não teremos resposta oficial, 
+        // então aguardamos 1.5s e assumimos sucesso.
         setTimeout(() => {
+            btn.innerText = "./done";
+            celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
+            celulaStatus.className = novoStatus ? "status-on" : "status-off";
             btn.disabled = false;
             btn.innerText = "./execute --toggle";
-            carregarAdmin();
-        }, 2000);
+            // Atualiza os dados globais para que o próximo clique saiba o status novo
+            carregarAdmin(); 
+        }, 1500);
 
     } catch (err) {
-        console.error("Erro ao editar:", err);
-        alert("Falha na comunicação com o servidor.");
+        alert("Erro na conexão SSH com a planilha.");
         carregarAdmin();
     }
 }
