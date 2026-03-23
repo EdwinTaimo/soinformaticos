@@ -407,18 +407,18 @@ if ("Notification" in window) {
     icon.classList.add('spinning');
     btn.style.opacity = "0.7";
     // Mudamos o conteúdo mantendo o ID do ícone para a animação continuar
-    btn.innerHTML = `<span id="icon-sync" class="spinning">🔄</span> Ligando ao Servidor...`;
+    btn.innerHTML = `<span id="icon-sync" class="spinning">🌀</span> Ligando ao Servidor...`;
 
     try {
         await carregarDados(); // Chama a tua função que busca no Google
         
-        // Feedback de Sucesso
+        // Feedback de Sucesso 
         setTimeout(() => {
             icon.classList.remove('spinning');
             btn.disabled = false;
             btn.style.opacity = "1";
             btn.style.backgroundColor = "#3ba55c"; // Fica verde momentaneamente
-            btn.innerHTML = `<span id="icon-sync">🔄</span> Status Atualizado!`;
+            btn.innerHTML = `<span id="icon-sync">✅</span> Status Atualizado!`;
             
             updateTimestamp();
 
