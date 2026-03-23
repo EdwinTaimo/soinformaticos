@@ -249,7 +249,6 @@
 </script> 
 
 
-  
     <script async src="https://www.googletagmanager.com/gtag/js?id=O_TEU_ID_AQUI"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -266,30 +265,30 @@
     document.getElementById('last-update').innerText = `Última verificação: ${hora}:${min}`;
 }
 
-async function refreshData() {
-    const btn = document.getElementById('btn-refresh');
-    const icon = document.getElementById('icon-sync');
-    
-    // Inicia animação e desativa botão
-    btn.disabled = true;
-    icon.classList.add('spinning');
-    btn.style.opacity = "0.7";
+let estadoAnterior = localStorage.getItem('backup_aulas');
 
-    await carregarDados(); // Chama a tua função que já existe
-    
-    // Para animação após 1 segundo (para dar feedback visual)
-    setTimeout(() => {
-        icon.classList.remove('spinning');
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        updateTimestamp();
-    }, 800);
+function verificarMudancas(dadosNovos) {
+    if (estadoAnterior && estadoAnterior !== dadosNovos) {
+        // Se os dados mudaram, enviamos a notificação
+        new Notification("Aulas 2º ANO | ET", {
+            body: "Houve uma atualização nos status das aulas!",
+            icon: "assets/icon.png" // Opcional: teu ícone
+        });
+    }
+    estadoAnterior = dadosNovos;
 }
 
 // Chamar o timestamp na primeira carga
 window.onload = updateTimestamp;
 
-
+if ("Notification" in window) {
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            console.log("Notificações autorizadas pelo utilizador.");
+        }
+    });
+}
+  
         
     </script>
 
