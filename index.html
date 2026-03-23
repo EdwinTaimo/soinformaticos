@@ -154,18 +154,41 @@
         ::-webkit-scrollbar-track { background: #2e3338; }
         ::-webkit-scrollbar-thumb { background: #202225; border-radius: 10px; }
 
-
-        /* Ajustes para Mobile */
+.fab-container {
+    position: fixed;
+    bottom: 25px;
+    right: 20px; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+}
+    /* Ajustes para Mobile - Espaço para Status e Docente */
 @media (max-width: 600px) {
-    /* ... outras regras ... */
+    body { padding: 10px; padding-bottom: 150px; }
+    h1 { font-size: 18px; }
+    
+    table { font-size: 12px; table-layout: fixed; } /* Força a tabela a respeitar larguras */
+    th, td { padding: 10px 4px; overflow: hidden; }
 
-    .col-docente {
-        display: table-cell; /* Garante que aparece */
-        font-size: 10px;      /* Letra pequena para caber */
-        color: #8e9297;      /* Cor cinza discreta */
-        max-width: 80px;     /* Limita a largura */
-        overflow: hidden;    /* Esconde o que sobrar */
-        text-overflow: ellipsis; /* Adiciona "..." se for muito grande */
+    /* Coluna Data */
+    th:nth-child(1), td:nth-child(1) { width: 60px; }
+    /* Coluna Cadeira */
+    th:nth-child(2), td:nth-child(2) { width: auto; }
+    /* Coluna Docente - Com "..." se for grande */
+    .col-docente { 
+        display: table-cell; 
+        width: 70px;
+        color: #8e9297;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    /* Coluna Status - Prioridade de espaço */
+    th:nth-child(4), td:nth-child(4) { width: 85px; text-align: right; }
+
+    .status-badge {
+        padding: 4px 6px;
+        font-size: 10px;
         white-space: nowrap;
     }
 }
@@ -179,12 +202,12 @@
 
 .fab-container {
     position: fixed;
-    bottom: 30px; /* Distância do fundo */
-    right: 20px;
+    bottom: 25px;
+    right: 20px; 
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Espaço entre os dois botões */
-    z-index: 1000;
+    gap: 12px;
+    z-index: 9999;
 }
 
 .btn-contato {
@@ -374,6 +397,48 @@ if ("Notification" in window) {
         }
     });
 }
+
+        async function refreshData() {
+    const btn = document.getElementById('btn-refresh');
+    const icon = document.getElementById('icon-sync');
+    
+    // Início da Animação e Bloqueio
+    btn.disabled = true;
+    icon.classList.add('spinning');
+    btn.style.opacity = "0.7";
+    // Mudamos o conteúdo mantendo o ID do ícone para a animação continuar
+    btn.innerHTML = `<span id="icon-sync" class="spinning">🔄</span> Ligando ao Servidor...`;
+
+    try {
+        await carregarDados(); // Chama a tua função que busca no Google
+        
+        // Feedback de Sucesso
+        setTimeout(() => {
+            icon.classList.remove('spinning');
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            btn.style.backgroundColor = "#3ba55c"; // Fica verde momentaneamente
+            btn.innerHTML = `<span id="icon-sync">🔄</span> Status Atualizado!`;
+            
+            updateTimestamp();
+
+            // Volta ao normal depois de 2 segundos
+            setTimeout(() => {
+                btn.style.backgroundColor = "#5865f2";
+                btn.innerHTML = `<span id="icon-sync">🔄</span> Atualizar Status`;
+            }, 2000);
+        }, 1000);
+
+    } catch (e) {
+        btn.innerHTML = `❌ Erro na Conexão`;
+        btn.disabled = false;
+    }
+}
+
+       
+
+
+       
   
        
 </script>
