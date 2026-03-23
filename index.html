@@ -157,28 +157,18 @@
 
         /* Ajustes para Mobile */
 @media (max-width: 600px) {
-    body {
-        padding: 10px; /* Menos margem nas bordas */
-    }
+    /* ... outras regras ... */
 
-    h1 {
-        font-size: 20px; /* Título menor para caber num telemóvel */
-        text-align: center;
-    }
-
-    table {
-        width: 100%;
-        font-size: 14px; /* Tamanho de letra ideal para ler sem zoom */
-    }
-
-    th, td {
-        padding: 10px 5px; /* Reduz o espaço interno para caber mais texto */
-    }
-
-    /* Esconder colunas menos importantes no mobile se necessário */
     .col-docente {
-        display: none; /* Exemplo: se a tabela for muito larga, podemos esconder o nome do prof */
+        display: table-cell; /* Garante que aparece */
+        font-size: 10px;      /* Letra pequena para caber */
+        color: #8e9297;      /* Cor cinza discreta */
+        max-width: 80px;     /* Limita a largura */
+        overflow: hidden;    /* Esconde o que sobrar */
+        text-overflow: ellipsis; /* Adiciona "..." se for muito grande */
+        white-space: nowrap;
     }
+}
 
     #btn-refresh {
         width: 100%; /* Botão grande e fácil de clicar com o polegar */
