@@ -105,7 +105,7 @@
 
     <script>
         const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv';
-        const URL_API = 'https://script.google.com/macros/s/AKfycbyduueNOzF22dM7lJJ0sNrmSeSySsEGWQmwDtlDxYbukdlUWtubBnr3QgmQQ2rnBnTG/exec'; 
+        const URL_API = 'https://script.google.com/macros/s/AKfycbxx_edfCQ1YUoHm9NUhgDYqiPq8DfrA2w6rEdm8Wtys_rMUpDZnPkXELT01EEM65YO3/exec'; 
         const SENHA_MESTRA = "2026"; 
 
         async function carregarAdmin() {
@@ -141,31 +141,51 @@
             } catch(e) { console.error("Erro no terminal:", e); }
         }
 
-        async function toggleStatus(nome, statusAtual, btn) {
-            const pass = prompt("Sudo password:");
-            if(pass !== SENHA_MESTRA) return alert("Permission denied.");
+       async function toggleStatus(nome, statusAtual, btn) {
+    const pass = prompt("Sudo password:");
+    if(pass !== SENHA_MESTRA) return alert("Permission denied.");
 
-            const novoStatus = !statusAtual;
-            
-            // FEEDBACK INSTANTÂNEO
-            const celulaStatus = btn.parentElement.previousElementSibling;
-            celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
-            celulaStatus.className = novoStatus ? "status-on" : "status-off";
-            btn.innerText = "./processing...";
+    const novoStatus = !statusAtual;
+    
+    // Feedback visual imediato
+    const celulaStatus = btn.parentElement.previousElementSibling;
+    celulaStatus.innerText = "./processing...";
+    btn.disabled = true;
 
-            try {
-                await fetch(URL_API, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
-                });
-                btn.innerText = "./success";
-                setTimeout(carregarAdmin, 1500); 
-            } catch (err) {
-                alert("Critical failure.");
-                carregarAdmin();
-            }
-        }
+    try {
+        // Criamos os dados para enviar
+        const dados = {
+            cadeira: nome,
+            novoStatus: novoStatus
+        };
+
+        // Envio para o Google Apps Script
+        await fetch(URL_API, {
+            method: 'POST',
+            mode: 'no-cors', // Essencial para evitar erros de política do Google
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+
+        // Sucesso visual
+        btn.innerText = "./done";
+        celulaStatus.innerText = novoStatus ? "[confirmada]" : "[pendente]";
+        celulaStatus.className = novoStatus ? "status-on" : "status-off";
+        
+        // Recarrega a tabela após 2 segundos para confirmar
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerText = "./execute --toggle";
+            carregarAdmin();
+        }, 2000);
+
+    } catch (err) {
+        console.error("Erro ao editar:", err);
+        alert("Falha na comunicação com o servidor.");
+        carregarAdmin();
+    }
+}
 
         carregarAdmin();
     </script>
