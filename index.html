@@ -249,46 +249,7 @@
 </script> 
 
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=O_TEU_ID_AQUI"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'G-ECVJGWJ7G1');
-
-
-        function updateTimestamp() {
-    const agora = new Date();
-    const hora = agora.getHours().toString().padStart(2, '0');
-    const min = agora.getMinutes().toString().padStart(2, '0');
-    document.getElementById('last-update').innerText = `Última verificação: ${hora}:${min}`;
-}
-
-let estadoAnterior = localStorage.getItem('backup_aulas');
-
-function verificarMudancas(dadosNovos) {
-    if (estadoAnterior && estadoAnterior !== dadosNovos) {
-        // Se os dados mudaram, enviamos a notificação
-        new Notification("Aulas 2º ANO | ET", {
-            body: "Houve uma atualização nos status das aulas!",
-            icon: "assets/icon.png" // Opcional: teu ícone
-        });
-    }
-    estadoAnterior = dadosNovos;
-}
-
-// Chamar o timestamp na primeira carga
-window.onload = updateTimestamp;
-
-if ("Notification" in window) {
-    Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-            console.log("Notificações autorizadas pelo utilizador.");
-        }
-    });
-}
-  
         
     </script>
 
@@ -324,6 +285,9 @@ if ("Notification" in window) {
     </button>
     <span id="last-update" style="margin-top: 10px;">Atualizado agora</span>       
  </div>
+
+
+        
 
     
    <script>
@@ -389,6 +353,39 @@ if ("Notification" in window) {
 
     carregarDados();
     setInterval(carregarDados, 30000);
+
+            function updateTimestamp() {
+    const agora = new Date();
+    const hora = agora.getHours().toString().padStart(2, '0');
+    const min = agora.getMinutes().toString().padStart(2, '0');
+    document.getElementById('last-update').innerText = `Última verificação: ${hora}:${min}`;
+}
+
+let estadoAnterior = localStorage.getItem('backup_aulas');
+
+function verificarMudancas(dadosNovos) {
+    if (estadoAnterior && estadoAnterior !== dadosNovos) {
+        // Se os dados mudaram, enviamos a notificação
+        new Notification("Aulas 2º ANO | ET", {
+            body: "Houve uma atualização nos status das aulas!",
+            icon: "assets/icon.png" // Opcional: teu ícone
+        });
+    }
+    estadoAnterior = dadosNovos;
+}
+
+// Chamar o timestamp na primeira carga
+window.onload = updateTimestamp;
+
+if ("Notification" in window) {
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            console.log("Notificações autorizadas pelo utilizador.");
+        }
+    });
+}
+  
+       
 </script>
 
 <div class="fab-container">
