@@ -1,0 +1,14 @@
+# Ficheiros de Sistema
+.DS_Store
+Thumbs.db
+
+# Ficheiros temporários de edição
+*.swp
+*.log
+
+# Pastas de configuração de editores (VS Code, etc)
+.vscode/
+.idea/
+
+# Se criares um ficheiro de variáveis secretas no futuro
+.env
