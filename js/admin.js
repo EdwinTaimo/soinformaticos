@@ -10,36 +10,28 @@ async function carregarAdmin() {
     tableBody.innerHTML = "";
 
     rows.forEach(row => {
-       const statusRaw = cols[3].trim().toUpperCase();
-let statusFormatado = "";
-let classeCor = "";
+        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const cadeira = cols[1].replace(/"/g, "").trim();
+        const statusRaw = cols[3].trim().toUpperCase();
+        
+        let statusTxt = "[pendente]";
+        let cor = "status-off";
+        if(statusRaw === "TRUE") { statusTxt = "[confirmada]"; cor = "status-on"; }
+        else if(statusRaw === "CANCELADA") { statusTxt = "[cancelada]"; cor = "status-blue"; }
 
-if (statusRaw === "TRUE") {
-    statusFormatado = "[confirmada]";
-    classeCor = "status-on"; // verde
-} else if (statusRaw === "CANCELADA") {
-    statusFormatado = "[cancelada]";
-    classeCor = "status-blue"; // precisas adicionar .status-blue { color: #00aff4; } no admin.css
-} else {
-    statusFormatado = "[pendente]";
-    classeCor = "status-off"; // vermelho
-}
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${cadeira}</td><td class="${cor}">${statusTxt}</td>
+            <td><button class="btn-action" onclick="toggleStatus('${cadeira}')">./toggle</button></td>`;
+        tableBody.appendChild(tr);
     });
 }
 
-async function toggleStatus(nome, statusAtual, btn) {
-    if(prompt("Sudo password:") !== SENHA_MESTRA) return alert("Access Denied.");
-    btn.disabled = true;
-    const novoStatus = !statusAtual;
-
-    await fetch(URL_API, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ cadeira: nome, novoStatus: novoStatus })
-    });
-
-    setTimeout(() => { carregarAdmin(); }, 1500);
+async function toggleStatus(nome) {
+    if(prompt("Sudo password:") !== SENHA_MESTRA) return;
+    const op = prompt("1-Conf, 2-Pend, 3-Canc");
+    let acao = op === "1" ? "TRUE" : op === "3" ? "CANCELADA" : "FALSE";
+    
+    await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({cadeira: nome, novoStatus: acao}) });
+    setTimeout(carregarAdmin, 1500);
 }
-
 window.onload = carregarAdmin;
