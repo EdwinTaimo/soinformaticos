@@ -10,18 +10,20 @@ async function carregarAdmin() {
     tableBody.innerHTML = "";
 
     rows.forEach(row => {
-        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        if (cols.length >= 4) {
-            const cadeira = cols[1].replace(/"/g, "").trim();
-            const isConfirmed = cols[3].trim().toUpperCase() === "TRUE";
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${cadeira.toLowerCase()}</td>
-                <td class="${isConfirmed ? 'status-on' : 'status-off'}">${isConfirmed ? '[confirmada]' : '[pendente]'}</td>
-                <td><button class="btn-action" onclick="toggleStatus('${cadeira}', ${isConfirmed}, this)">./execute --toggle</button></td>
-            `;
-            tableBody.appendChild(tr);
-        }
+       const statusRaw = cols[3].trim().toUpperCase();
+let statusFormatado = "";
+let classeCor = "";
+
+if (statusRaw === "TRUE") {
+    statusFormatado = "[confirmada]";
+    classeCor = "status-on"; // verde
+} else if (statusRaw === "CANCELADA") {
+    statusFormatado = "[cancelada]";
+    classeCor = "status-blue"; // precisas adicionar .status-blue { color: #00aff4; } no admin.css
+} else {
+    statusFormatado = "[pendente]";
+    classeCor = "status-off"; // vermelho
+}
     });
 }
 
