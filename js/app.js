@@ -32,25 +32,28 @@ function renderizarTabela(dados) {
     const mapaDias = { 0:0, 1:0, 2:1, 3:1, 4:2, 5:3, 6:4 };
     const nomesDias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 
-    linhas.forEach((linha, index) => {
-        const colunas = linha.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        if(colunas.length >= 4 && colunas[1] && mapaDias[index] !== undefined) {
-            const dataCadeira = new Date(segundaRef);
-            dataCadeira.setDate(segundaRef.getDate() + mapaDias[index]);
-            const diaMes = dataCadeira.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' });
-            const isChecked = colunas[3].trim().toUpperCase() === "TRUE";
+   // ... dentro do rows.forEach ...
+const statusTexto = colunas[3].trim().toUpperCase();
+let classeStatus = "";
+let textoExibido = "";
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td style="font-size: 11px; color: #8e9297;">${nomesDias[mapaDias[index]]}<br><b style="color: #dcddde;">${diaMes}</b></td>
-                <td><strong>${colunas[1].replace(/"/g, "")}</strong></td>
-                <td class="col-docente">${colunas[2] || "---"}</td>
-                <td><span class="status-badge ${isChecked ? 'confirmada' : 'por-confirmar'}">${isChecked ? 'Confirmada' : 'Pendente'}</span></td>
-            `;
-            corpoTabela.appendChild(tr);
-        }
-    });
+if (statusTexto === "TRUE") {
+    classeStatus = "confirmada";
+    textoExibido = "Confirmada";
+} else if (statusTexto === "CANCELADA") {
+    classeStatus = "cancelada";
+    textoExibido = "Cancelada";
+} else {
+    classeStatus = "por-confirmar";
+    textoExibido = "Pendente";
 }
+
+tr.innerHTML = `
+    <td style="font-size: 11px; color: #8e9297;">${nomesDias[mapaDias[index]]}<br><b style="color: #dcddde;">${diaMes}</b></td>
+    <td><strong>${colunas[1].replace(/"/g, "")}</strong></td>
+    <td class="col-docente">${colunas[2] || "---"}</td>
+    <td><span class="status-badge ${classeStatus}">${textoExibido}</span></td>
+`;
 
 async function refreshData() {
     const btn = document.getElementById('btn-refresh');
