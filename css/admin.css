@@ -34,3 +34,4 @@ td { padding: 12px 10px; border-bottom: 1px solid #222; }
 .btn-action:hover { background: var(--terminal-green); color: #000; }
 .status-on { color: #3ba55c; }
 .status-off { color: #ed4245; }
+.status-blue { color: #00aff4; }
