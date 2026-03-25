@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informatica 2º Ano - UniLicungo</title>
+    <title>Informática 2º Ano - UniLicungo</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header class="gh-header">
         <div class="header-container">
-            <span class="gh-logo">
-                <img src="assets/icon.png" alt="Logo Só Informáticos" height="32" width="32">
-            </span>
-            <span class="repo-name">Info2Ano / <strong>aulas</strong></span>
+            <div class="header-left">
+                <span class="gh-logo">
+                    <img src="assets/icon.png" alt="Logo" height="32" width="32">
+                </span>
+                <span class="repo-name">Info2Ano / <strong>aulas</strong></span>
+            </div>
             
+            <div id="weather-widget" class="weather-mini"></div>
+
             <div class="gh-controls">
                 <button class="gh-btn btn-refresh" id="btn-refresh" onclick="carregarDados()">🔄 Sync</button>
                 <div class="theme-dropdown">
@@ -30,11 +34,19 @@
 
     <main class="gh-main">
         <div class="container">
-            <div class="gh-card table-card">
+            <div id="quote-container" class="stoic-card fadeInUp"></div>
+
+            <div class="gh-card table-card fadeInUp">
                 <div class="card-header">
-                    <h3>Quadro de Aulas</h3>
-                    <span class="branch-tag">main</span>
+                    <div class="header-info">
+                        <h3>Quadro de Aulas</h3>
+                        <span class="branch-tag">main</span>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Buscar cadeira ou docente..." onkeyup="filtrarTabela()">
+                    </div>
                 </div>
+
                 <table id="tabela-aulas" class="gh-table">
                     <thead>
                         <tr>
@@ -46,7 +58,6 @@
                     </thead>
                     <tbody>
                         <tr class="skeleton-row"><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td></tr>
-                        <tr class="skeleton-row"><td><div></div></td><td><div></div></td><td><div></div></td><td><div></div></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -55,17 +66,19 @@
 
     <div class="gh-fab-container">
         <a href="javascript:void(0)" onclick="mostrarCafe()" class="gh-fab btn-cafe">☕</a>
-        <a href="tel:+258847243782" class="gh-fab btn-adjunta">📞Ligar a Adjunta</a>
-        <a href="tel:+258833973761" class="gh-fab btn-chefe">📞 Ligar ao chefe</a>
+        <a href="tel:+258847243782" class="gh-fab btn-adjunta">📞 Adjunta</a>
+        <a href="tel:+258833973761" class="gh-fab btn-chefe">📞 Chefe</a>
     </div>
 
     <div id="overlay-cafe" class="overlay glass-overlay" onclick="fecharCafe()"></div>
     <div id="modal-cafe" class="gh-modal liquid-glass">
         <div class="modal-header">
-            <h3>Apoie o Dev para manter o servidor no ar</h3>
+            <h3>Apoio ao Servidor</h3>
             <button class="close-btn" onclick="fecharCafe()">×</button>
         </div>
-        <p>M-kesh: <strong>833973761</strong></p>
+        <div class="modal-body">
+            <p>M-pesa/M-kesh: <strong>833973761</strong></p>
+        </div>
     </div>
 
     <script src="js/app.js"></script>
