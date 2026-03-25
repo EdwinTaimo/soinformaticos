@@ -19,12 +19,11 @@
             <button class="theme-btn" onclick="setTheme('hacker')">👨‍💻 Hacker</button>
         </div>
         <hr>
-        <button class="btn-refresh-side" onclick="refreshData()">🔄 Forçar Atualização</button>
+        <button class="btn-refresh-side" onclick="carregarDados()">🔄 Atualizar Dados</button>
     </div>
 
     <div class="container">
         <div class="header"><h1>INFORMATICA 2 ANO</h1></div>
-        
         <table id="tabela-aulas">
             <thead>
                 <tr>
@@ -39,16 +38,8 @@
     </div>
 
     <div class="fab-container">
-        <a href="javascript:void(0)" onclick="mostrarCafe()" class="fab btn-cafe" title="Apoiar">☕</a>
         <a href="tel:+258847243782" class="fab btn-adjunta" title="Adjunta">📞</a>
         <a href="tel:+258833973761" class="fab btn-chefe" title="Chefe">👤</a>
-    </div>
-
-    <div id="overlay-cafe" class="overlay" onclick="fecharCafe()"></div>
-    <div id="modal-cafe" class="modal-cafe">
-        <h3>Apoiar o Dev</h3>
-        <p>M-kesh: 833973761</p>
-        <button onclick="fecharCafe()">Fechar</button>
     </div>
 
     <script src="js/app.js"></script>
