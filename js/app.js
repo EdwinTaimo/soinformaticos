@@ -63,4 +63,40 @@ async function refreshData() {
 function mostrarCafe() { document.getElementById('overlay-cafe').style.display = 'block'; document.getElementById('modal-cafe').style.display = 'block'; }
 function fecharCafe() { document.getElementById('overlay-cafe').style.display = 'none'; document.getElementById('modal-cafe').style.display = 'none'; }
 
+// Abrir/Fechar Menu
+function toggleMenu() {
+    document.getElementById('side-menu').classList.toggle('active');
+}
+
+// Atualizar a renderização para garantir os nomes dos dias e labels
+function renderizarTabela(dados) {
+    const linhas = dados.split(/\r?\n/).filter(l => l.trim() !== "").slice(1);
+    const corpoTabela = document.querySelector("#tabela-aulas tbody");
+    corpoTabela.innerHTML = ""; 
+
+    const nomesDias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
+    const mapaDias = { 0:0, 1:0, 2:1, 3:1, 4:2, 5:2, 6:3, 7:3, 8:4, 9:4 };
+
+    linhas.forEach((linha, index) => {
+        const colunas = linha.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        if(colunas.length >= 4 && colunas[1]) {
+            const statusTexto = colunas[3].trim().toUpperCase();
+            let classeStatus = "por-confirmar";
+            let textoExibido = "Pendente";
+
+            if (statusTexto === "TRUE") { classeStatus = "confirmada"; textoExibido = "Confirmada"; }
+            else if (statusTexto === "CANCELADA") { classeStatus = "cancelada"; textoExibido = "Cancelada"; }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td data-label="Dia"><b>${nomesDias[mapaDias[index] || 0]}</b></td>
+                <td data-label="Cadeira"><strong>${colunas[1].replace(/"/g, "")}</strong></td>
+                <td data-label="Docente" class="col-docente">${colunas[2] || "---"}</td>
+                <td data-label="Status"><span class="status-badge ${classeStatus}">${textoExibido}</span></td>
+            `;
+            corpoTabela.appendChild(tr);
+        }
+    });
+}
+
 window.onload = carregarDados;
