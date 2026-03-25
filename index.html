@@ -9,6 +9,15 @@
 <body>
     <div class="container">
         <div class="header"><h1>INFORMATICA 2 ANO</h1></div>
+
+
+           <div class="theme-switcher">
+    <button class="theme-btn" onclick="setTheme('light')">☀️ Claro</button>
+    <button class="theme-btn" onclick="setTheme('dark')">🌙 Escuro</button>
+    <button class="theme-btn" onclick="setTheme('hacker')">👨‍💻 Hacker</button>
+</div>
+
+        
         <table id="tabela-aulas">
             <thead><tr><th>Dia</th><th>Cadeira</th><th class="col-docente">Docente</th><th>Status</th></tr></thead>
             <tbody></tbody>
@@ -27,6 +36,8 @@
         <h3>Apoiar o Dev</h3><p>M-kesh: 833973761</p>
         <button onclick="fecharCafe()">Fechar</button>
     </div>
+
+    
     <script src="js/app.js"></script>
 </body>
 </html>
