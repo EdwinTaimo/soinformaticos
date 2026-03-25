@@ -1,143 +1,117 @@
 :root {
-    /* GitHub Light Default */
     --gh-bg-header: #24292e;
     --gh-bg-main: #f6f8fa;
     --gh-bg-card: #ffffff;
     --gh-text-main: #24292e;
-    --gh-text-header: #ffffff;
     --gh-border: #e1e4e8;
-    --gh-btn-bg: #fafbfc;
-    --gh-btn-text: #24292e;
-    --gh-btn-border: rgba(27,31,35,0.15);
     --gh-accent: #0366d6;
-    
-    /* Status Colors (Liquid Glass base) */
-    --color-conf: #28a745;
-    --color-pend: #d73a49;
-    --color-canc: #0366d6;
-    
-    --font-gh: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --status-confirm: #28a745;
+    --status-cancel: #d73a49;
+    --status-pend: #f1e05a;
 }
 
 [data-theme="dark"] {
-    /* GitHub Dark Dimmed */
     --gh-bg-header: #1c2128;
     --gh-bg-main: #22272e;
     --gh-bg-card: #2d333b;
     --gh-text-main: #adbac7;
     --gh-border: #444c56;
-    --gh-btn-bg: #373e47;
-    --gh-btn-text: #adbac7;
-    --gh-btn-border: rgba(205,217,229,0.1);
+    --gh-accent: #539bf5;
 }
 
 [data-theme="hacker"] {
-    --gh-bg-header: #000; --gh-bg-main: #0a0a0a; --gh-bg-card: #111;
-    --gh-text-main: #00ff41; --gh-border: #00ff41; --gh-btn-bg: #000;
-    --gh-btn-text: #00ff41; --gh-accent: #00ff41;
+    --gh-bg-header: #000000;
+    --gh-bg-main: #0d1117;
+    --gh-bg-card: #000000;
+    --gh-text-main: #00ff41;
+    --gh-border: #00ff4133;
+    --gh-accent: #00ff41;
+    --status-confirm: #00ff41;
 }
 
-body { font-family: var(--font-gh); background-color: var(--gh-bg-main); color: var(--gh-text-main); margin: 0; transition: background 0.2s; }
-
-/* GitHub Header */
-.gh-header { background-color: var(--gh-bg-header); color: var(--gh-text-header); padding: 16px; }
-.header-container { max-width: 1012px; margin: auto; display: flex; align-items: center; gap: 16px; }
-.gh-logo svg { fill: #ffffff; }
-.repo-name { font-size: 16px; }
-.repo-name strong { font-weight: 600; }
-.branch-tag { background: rgba(100,100,100,0.1); padding: 2px 6px; border-radius: 20px; font-size: 12px; }
-
-/* Controls & Dropdown */
-.gh-controls { margin-left: auto; display: flex; gap: 8px; position: relative; }
-.gh-btn { 
-    background-color: var(--gh-btn-bg); color: var(--gh-btn-text); 
-    border: 1px solid var(--gh-btn-border); border-radius: 6px;
-    padding: 6px 12px; font-weight: 500; font-size: 12px; cursor: pointer;
-    transition: 0.2s;
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: var(--gh-bg-main);
+    color: var(--gh-text-main);
+    transition: all 0.3s ease;
 }
-.gh-btn:hover { border-color: rgba(27,31,35,0.35); transform: translateY(-1px); }
-.gh-btn:active { background-color: #f3f4f6; transform: translateY(0); }
 
-.theme-dropdown { position: relative; display: inline-block; }
-.theme-content {
-    display: none; position: absolute; right: 0; top: 110%; background: var(--gh-bg-card);
-    min-width: 160px; border: 1px solid var(--gh-border); border-radius: 6px; z-index: 1000;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1); overflow: hidden;
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.gh-header { background: var(--gh-bg-header); color: white; padding: 12px 20px; }
+.header-container { display: flex; justify-content: space-between; align-items: center; }
+.repo-name { margin-left: 10px; font-size: 14px; }
+
+/* Stoic Card */
+.stoic-card {
+    background: var(--gh-bg-card);
+    border: 1px solid var(--gh-border);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: italic;
+    border-left: 4px solid var(--gh-accent);
 }
-.theme-content a { color: var(--gh-text-main); padding: 8px 16px; text-decoration: none; display: block; font-size: 12px; }
-.theme-content a:hover { background-color: rgba(100,100,100,0.1); }
-.theme-dropdown:hover .theme-content { display: block; }
 
-/* Container */
-.gh-main { max-width: 1012px; margin: 32px auto; padding: 0 16px; }
-.gh-card { background: var(--gh-bg-card); border: 1px solid var(--gh-border); border-radius: 6px; }
-.table-card { overflow: hidden; }
-.card-header { padding: 16px; border-bottom: 1px solid var(--gh-border); display: flex; align-items: center; justify-content: space-between; }
-.card-header h3 { margin: 0; font-size: 14px; font-weight: 600; }
+/* Tabela e Cards */
+.gh-card {
+    background: var(--gh-bg-card);
+    border: 1px solid var(--gh-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
 
-/* GitHub Table */
-.gh-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.gh-table th { background-color: rgba(100,100,100,0.03); padding: 12px; text-align: left; border-bottom: 1px solid var(--gh-border); font-weight: 600; }
+.card-header {
+    padding: 16px;
+    background: var(--gh-bg-main);
+    border-bottom: 1px solid var(--gh-border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.search-box input {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--gh-border);
+    background: var(--gh-bg-card);
+    color: var(--gh-text-main);
+    width: 200px;
+}
+
+.gh-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.gh-table th { text-align: left; padding: 12px; background: var(--gh-bg-main); border-bottom: 1px solid var(--gh-border); }
 .gh-table td { padding: 12px; border-bottom: 1px solid var(--gh-border); }
-.gh-table tr:last-child td { border-bottom: none; }
-.gh-table tr:hover { background-color: rgba(100,100,100,0.02); }
 
-/* Liquid Glass Status & Modals */
+/* Status Badges */
 .status-badge {
-    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
-    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); /* Liquid Glass effect */
-    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
 }
-.confirmada { background: rgba(40, 167, 69, 0.15); color: var(--color-conf); border-color: rgba(40, 167, 69, 0.3); }
-.por-confirmar { background: rgba(215, 58, 73, 0.15); color: var(--color-pend); border-color: rgba(215, 58, 73, 0.3); }
-.cancelada { background: rgba(3, 102, 214, 0.15); color: var(--color-canc); border-color: rgba(3, 102, 214, 0.3); }
+.confirmada { background: rgba(40, 167, 69, 0.1); color: var(--status-confirm); border: 1px solid var(--status-confirm); }
+.cancelada { background: rgba(215, 58, 73, 0.1); color: var(--status-cancel); border: 1px solid var(--status-cancel); }
+.por-confirmar { background: rgba(241, 224, 90, 0.1); color: #b08800; border: 1px solid #b08800; }
 
-/* FABs Estilo GitHub */
-.gh-fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 100; }
-.gh-fab {
-    width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: var(--gh-btn-bg); color: var(--gh-btn-text); border: 1px solid var(--gh-btn-border);
-    text-decoration: none; font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: 0.3s cubic-bezier(0.2, 0, 0, 1);
+/* Dia de Hoxe */
+.row-today { background: rgba(3, 102, 214, 0.05) !important; font-weight: bold; border-left: 4px solid var(--gh-accent); }
+
+/* Animacións */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-.gh-fab:hover { border-color: rgba(27,31,35,0.35); box-shadow: 0 6px 16px rgba(0,0,0,0.15); transform: translateY(-3px) scale(1.05); }
+.fadeInUp { animation: fadeInUp 0.5s ease forwards; }
 
-/* Liquid Glass Modal */
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
-.glass-overlay { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-
-.gh-modal {
-    display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-    background: var(--gh-bg-card); width: 90%; max-width: 400px; border-radius: 8px; border: 1px solid var(--gh-border);
-    z-index: 1001; box-shadow: 0 12px 30px rgba(0,0,0,0.2); animation: modalIn 0.3s forwards;
-}
-.liquid-glass {
-    background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.2);
-}
-[data-theme="dark"] .liquid-glass { background: rgba(45,51,59,0.8); border: 1px solid rgba(255,255,255,0.05); }
-
-.modal-header { padding: 12px 16px; border-bottom: 1px solid var(--gh-border); display: flex; justify-content: space-between; align-items: center; }
-.modal-header h3 { margin: 0; font-size: 14px; font-weight: 600; }
-.gh-modal p { padding: 16px; font-size: 14px; }
-.close-btn { background: none; border: none; font-size: 20px; color: var(--gh-text-main); cursor: pointer; }
-
-/* Animations */
-@keyframes modalIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
-
-/* Skeleton Loading */
-.skeleton-row td div { height: 16px; background: rgba(100,100,100,0.1); border-radius: 4px; animation: skeleton-pulse 1.5s infinite; }
-@keyframes skeleton-pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-/* Responsividade Mobile */
+/* Responsive */
 @media (max-width: 600px) {
-    .gh-header { padding: 12px; }
-    .gh-main { margin: 16px auto; }
-    .gh-table { font-size: 12px; }
-    .gh-table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; }
-    tr { margin-bottom: 10px; border: 1px solid var(--gh-border); border-radius: 6px; padding: 8px; }
-    td { border: none; position: relative; padding-left: 35%; text-align: right; }
-    td::before { content: attr(data-label); position: absolute; left: 10px; font-weight: 600; color: var(--gh-accent); }
-    .status-badge { width: 100%; display: block; box-sizing: border-radius; }
+    .gh-table thead { display: none; }
+    .gh-table td { display: block; text-align: right; border: none; }
+    .gh-table td::before { content: attr(data-label); float: left; font-weight: bold; }
+    .gh-table tr { display: block; border-bottom: 2px solid var(--gh-border); margin-bottom: 10px; }
 }
