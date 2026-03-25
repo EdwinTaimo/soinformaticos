@@ -76,3 +76,40 @@ td { padding: 15px; border-bottom: 1px solid var(--border); }
     td { display: flex; justify-content: space-between; border: none; padding: 8px 10px; }
     td::before { content: attr(data-label); font-weight: bold; color: var(--accent); }
 }
+
+/* Botão de Engrenagem (Menu) */
+#menu-toggle {
+    position: fixed; top: 20px; right: 20px; z-index: 1000;
+    background: var(--accent); border: none; border-radius: 50%;
+    width: 45px; height: 45px; cursor: pointer; font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Menu Lateral */
+.side-menu {
+    position: fixed; right: -280px; top: 0; width: 250px; height: 100%;
+    background: var(--bg-container); z-index: 1001; transition: 0.3s;
+    padding: 20px; border-left: 1px solid var(--border);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+}
+.side-menu.active { right: 0; }
+.close-btn { background: none; border: none; color: var(--text-main); font-size: 30px; cursor: pointer; float: right; }
+
+/* Botões de Chamada (FAB) Reorganizados */
+.fab-container {
+    position: fixed; bottom: 30px; right: 25px;
+    display: flex; flex-direction: column; gap: 15px; z-index: 999;
+}
+.fab {
+    width: 55px; height: 55px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; color: white; font-size: 22px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: 0.2s;
+}
+.fab:active { transform: scale(0.9); }
+.btn-cafe { background: #6F4E37; }
+.btn-adjunta { background: #5865f2; }
+.btn-chefe { background: #3ba55c; }
+
+/* Correção da Tabela para não quebrar com o Menu */
+.container { margin-top: 60px; margin-bottom: 100px; }
