@@ -12,19 +12,23 @@ async function carregarDados() {
     }
 }
 
-function renderizarTabela(dados) {
-    const linhas = dados.split(/\r?\n/).filter(l => l.trim() !== "").slice(1);
-    const corpoTabela = document.querySelector("#tabela-aulas tbody");
-    corpoTabela.innerHTML = ""; 
+// Função para trocar temas
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+}
 
-    const hoje = new Date();
-    const diaSemanaAtual = hoje.getDay(); 
-    let segundaRef = new Date(hoje);
-    segundaRef.setDate(hoje.getDate() - (diaSemanaAtual === 0 ? 6 : diaSemanaAtual - 1));
+// Carregar tema salvo
+const savedTheme = localStorage.getItem('theme') || 'dark';
+setTheme(savedTheme);
 
-    const nomesDias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
-    const mapaDias = { 0:0, 1:0, 2:1, 3:1, 4:2, 5:3, 6:4 };
-
+// No loop de renderizarTabela, ajuste o innerHTML:
+tr.innerHTML = `
+    <td data-label="Dia"><b>${nomesDias[mapaDias[index] || 0]}</b></td>
+    <td data-label="Cadeira"><strong>${colunas[1].replace(/"/g, "")}</strong></td>
+    <td data-label="Docente" class="col-docente">${colunas[2] || "---"}</td>
+    <td data-label="Status"><span class="status-badge ${classeStatus}">${textoExibido}</span></td>
+`;
     linhas.forEach((linha, index) => {
         const colunas = linha.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         if(colunas.length >= 4 && colunas[1]) {
