@@ -1,115 +1,71 @@
 :root {
-    /* Tema Escuro (Padrão) */
     --bg-body: #36393f;
     --bg-container: #2f3136;
     --text-main: #dcddde;
-    --text-header: #ffffff;
     --accent: #5865f2;
     --border: #202225;
-    --card-bg: #36393f;
+    --confirmada: #3ba55c;
+    --pendente: #ed4245;
+    --cancelada: #00aff4;
 }
 
 [data-theme="light"] {
-    --bg-body: #f0f2f5;
-    --bg-container: #ffffff;
-    --text-main: #2e3338;
-    --text-header: #060607;
-    --accent: #5865f2;
-    --border: #e3e5e8;
-    --card-bg: #f2f3f5;
+    --bg-body: #f0f2f5; --bg-container: #ffffff; --text-main: #2e3338; --border: #e3e5e8;
 }
 
 [data-theme="hacker"] {
-    --bg-body: #000000;
-    --bg-container: #050505;
-    --text-main: #00ff41;
-    --text-header: #00ff41;
-    --accent: #008f11;
-    --border: #00ff41;
-    --card-bg: #0a0a0a;
-    --font-hacker: 'Courier New', monospace;
+    --bg-body: #000; --bg-container: #050505; --text-main: #00ff41; --accent: #00ff41; --border: #00ff41;
 }
 
 body { 
-    font-family: var(--font-hacker, 'Whitney', sans-serif); 
-    background-color: var(--bg-body); 
-    color: var(--text-main); 
-    transition: all 0.3s ease;
-    margin: 0; padding: 20px;
-}
-
-.container { 
-    background-color: var(--bg-container); 
-    border-radius: 12px; 
-    max-width: 800px; margin: auto;
-    border: 1px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-/* Seletor de Temas */
-.theme-switcher {
-    display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;
-}
-.theme-btn {
-    padding: 8px 15px; border-radius: 20px; border: 1px solid var(--accent);
-    background: transparent; color: var(--text-main); cursor: pointer;
-}
-
-/* Estilização da Tabela/Cards */
-table { width: 100%; border-collapse: collapse; }
-th { padding: 15px; color: var(--accent); text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
-td { padding: 15px; border-bottom: 1px solid var(--border); }
-
-/* Badges de Status Modernas */
-.status-badge { 
-    padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: bold; 
-    text-transform: uppercase;
-}
-.confirmada { background: rgba(59, 165, 92, 0.2); color: #3ba55c; border: 1px solid #3ba55c; }
-.por-confirmar { background: rgba(237, 66, 69, 0.2); color: #ed4245; border: 1px solid #ed4245; }
-.cancelada { background: rgba(0, 175, 244, 0.2); color: #00aff4; border: 1px solid #00aff4; }
-
-/* Mobile Responsiveness */
-@media (max-width: 600px) {
-    thead { display: none; }
-    tr { display: block; margin-bottom: 15px; background: var(--card-bg); border-radius: 8px; padding: 10px; }
-    td { display: flex; justify-content: space-between; border: none; padding: 8px 10px; }
-    td::before { content: attr(data-label); font-weight: bold; color: var(--accent); }
-}
-
-/* Botão de Engrenagem (Menu) */
-#menu-toggle {
-    position: fixed; top: 20px; right: 20px; z-index: 1000;
-    background: var(--accent); border: none; border-radius: 50%;
-    width: 45px; height: 45px; cursor: pointer; font-size: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-family: sans-serif; background-color: var(--bg-body); color: var(--text-main); 
+    margin: 0; padding: 20px; transition: 0.3s;
 }
 
 /* Menu Lateral */
-.side-menu {
-    position: fixed; right: -280px; top: 0; width: 250px; height: 100%;
-    background: var(--bg-container); z-index: 1001; transition: 0.3s;
+#side-menu {
+    position: fixed; right: -260px; top: 0; width: 240px; height: 100%;
+    background: var(--bg-container); z-index: 2000; transition: 0.4s;
     padding: 20px; border-left: 1px solid var(--border);
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
 }
-.side-menu.active { right: 0; }
-.close-btn { background: none; border: none; color: var(--text-main); font-size: 30px; cursor: pointer; float: right; }
+#side-menu.active { right: 0; }
 
-/* Botões de Chamada (FAB) Reorganizados */
+#menu-toggle {
+    position: fixed; top: 15px; right: 15px; z-index: 1500;
+    background: var(--accent); border: none; border-radius: 50%;
+    width: 45px; height: 45px; cursor: pointer; color: white;
+}
+
+/* Container e Tabela */
+.container { max-width: 900px; margin: 40px auto; }
+table { width: 100%; border-collapse: collapse; background: var(--bg-container); border-radius: 8px; overflow: hidden; }
+th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+
+/* Botões Flutuantes (FAB) - Fixos no canto inferior */
 .fab-container {
-    position: fixed; bottom: 30px; right: 25px;
-    display: flex; flex-direction: column; gap: 15px; z-index: 999;
+    position: fixed; bottom: 20px; right: 20px;
+    display: flex; flex-direction: column; gap: 10px; z-index: 1000;
 }
 .fab {
-    width: 55px; height: 55px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none; color: white; font-size: 22px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4); transition: 0.2s;
+    width: 50px; height: 50px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; text-decoration: none;
+    color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-.fab:active { transform: scale(0.9); }
 .btn-cafe { background: #6F4E37; }
-.btn-adjunta { background: #5865f2; }
-.btn-chefe { background: #3ba55c; }
+.btn-adjunta { background: var(--accent); }
+.btn-chefe { background: var(--confirmada); }
 
-/* Correção da Tabela para não quebrar com o Menu */
-.container { margin-top: 60px; margin-bottom: 100px; }
+/* Status */
+.status-badge { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+.confirmada { background: rgba(59, 165, 92, 0.2); color: var(--confirmada); }
+.por-confirmar { background: rgba(237, 66, 69, 0.2); color: var(--pendente); }
+.cancelada { background: rgba(0, 175, 244, 0.2); color: var(--cancelada); }
+
+/* Responsividade */
+@media (max-width: 600px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr { margin-bottom: 15px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+    td { border: none; position: relative; padding-left: 40%; }
+    td::before { content: attr(data-label); position: absolute; left: 10px; font-weight: bold; color: var(--accent); }
+}
