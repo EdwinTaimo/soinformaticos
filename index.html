@@ -7,38 +7,50 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <button id="menu-toggle" onclick="toggleMenu()">⚙️</button>
+
+    <div id="side-menu" class="side-menu">
+        <button class="close-btn" onclick="toggleMenu()">×</button>
+        <h3>Configurações</h3>
+        <p>Escolher Tema:</p>
+        <div class="theme-options">
+            <button class="theme-btn" onclick="setTheme('light')">☀️ Claro</button>
+            <button class="theme-btn" onclick="setTheme('dark')">🌙 Escuro</button>
+            <button class="theme-btn" onclick="setTheme('hacker')">👨‍💻 Hacker</button>
+        </div>
+        <hr>
+        <button class="btn-refresh-side" onclick="refreshData()">🔄 Forçar Atualização</button>
+    </div>
+
     <div class="container">
         <div class="header"><h1>INFORMATICA 2 ANO</h1></div>
-
         
         <table id="tabela-aulas">
-            <thead><tr><th>Dia</th><th>Cadeira</th><th class="col-docente">Docente</th><th>Status</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Dia</th>
+                    <th>Cadeira</th>
+                    <th class="col-docente">Docente</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
             <tbody></tbody>
         </table>
-        <div style="text-align:center; padding:20px;">
-            <button id="btn-refresh" onclick="refreshData()">🔄 Atualizar Status</button>
-        </div>
     </div>
+
     <div class="fab-container">
-        <a href="javascript:void(0)" onclick="mostrarCafe()" class="btn-contato btn-cafe">☕ Café</a>
-        <a href="tel:+258847243782" class="btn-contato btn-adjunta">📞 Adjunta</a>
-        <a href="tel:+258833973761" class="btn-contato btn-chefe">📞 Chefe</a>
+        <a href="javascript:void(0)" onclick="mostrarCafe()" class="fab btn-cafe" title="Apoiar">☕</a>
+        <a href="tel:+258847243782" class="fab btn-adjunta" title="Adjunta">📞</a>
+        <a href="tel:+258833973761" class="fab btn-chefe" title="Chefe">👤</a>
     </div>
+
     <div id="overlay-cafe" class="overlay" onclick="fecharCafe()"></div>
     <div id="modal-cafe" class="modal-cafe">
-        <h3>Apoiar o Dev</h3><p>M-kesh: 833973761</p>
+        <h3>Apoiar o Dev</h3>
+        <p>M-kesh: 833973761</p>
         <button onclick="fecharCafe()">Fechar</button>
     </div>
 
-    
-           <div class="theme-switcher">
-    <button class="theme-btn" onclick="setTheme('light')">☀️ Claro</button>
-    <button class="theme-btn" onclick="setTheme('dark')">🌙 Escuro</button>
-    <button class="theme-btn" onclick="setTheme('hacker')">👨‍💻 Hacker</button>
-</div>
-
-
-    
     <script src="js/app.js"></script>
 </body>
 </html>
