@@ -1,17 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8"><title>Admin Terminal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Só Informáticos</title>
+    <link rel="icon" href="assets/icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-    <div class="terminal-window">
-        <div class="terminal-header"><span>bash — admin</span></div>
-        <table>
-            <thead><tr><th>cadeira</th><th>status</th><th>ação</th></tr></thead>
-            <tbody id="table-body"></tbody>
-        </table>
+
+<div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-logo">
+            <img src="assets/icon.png" alt="Logo" width="32" height="32">
+            <div>
+                <div class="sidebar-title">Admin Panel</div>
+                <div class="sidebar-sub">Só Informáticos</div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="snav-link active" onclick="showSection('aulas',this)">📅 Aulas</a>
+            <a href="#" class="snav-link" onclick="showSection('estatisticas',this)">📊 Estatísticas</a>
+            <a href="#" class="snav-link" onclick="showSection('log',this)">📋 Log</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="index.html" class="sidebar-back">← Voltar ao Site</a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+        <div class="admin-topbar">
+            <div>
+                <h1 class="admin-page-title" id="page-title">Gestão de Aulas</h1>
+                <div class="admin-page-sub" id="page-sub">Gerir status das cadeiras</div>
+            </div>
+            <div class="admin-topbar-actions">
+                <button class="adm-btn" onclick="carregarAdmin()">🔄 Refresh</button>
+                <span class="admin-status-dot" id="admin-status">●</span>
+            </div>
+        </div>
+
+        <!-- SECTION: AULAS -->
+        <section class="admin-section active" id="section-aulas">
+            <div class="admin-filters">
+                <input type="text" id="adm-search" class="adm-input" placeholder="🔍 Pesquisar cadeira..." oninput="filterAdmin()">
+                <select id="adm-filter-status" class="adm-input" onchange="filterAdmin()">
+                    <option value="">Todos</option>
+                    <option value="confirmada">Confirmadas</option>
+                    <option value="pendente">Pendentes</option>
+                    <option value="cancelada">Canceladas</option>
+                </select>
+                <button class="adm-btn secondary" onclick="bulkAction('TRUE')">✅ Confirmar Todas</button>
+                <button class="adm-btn danger" onclick="bulkAction('CANCELADA')">❌ Cancelar Todas</button>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table" id="admin-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all" onchange="selectAll(this)"></th>
+                            <th>Dia</th>
+                            <th>Cadeira</th>
+                            <th>Docente</th>
+                            <th>Horário</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-body">
+                        <tr><td colspan="7" class="loading-row"><div class="adm-spinner"></div> A carregar...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION: STATS -->
+        <section class="admin-section" id="section-estatisticas">
+            <div class="adm-stats-grid" id="adm-stats-grid">
+                <div class="adm-stat-card">
+                    <div class="adm-stat-val" id="adm-total">–</div>
+                    <div class="adm-stat-lbl">Total de Aulas</div>
+                </div>
+                <div class="adm-stat-card green">
+                    <div class="adm-stat-val" id="adm-conf">–</div>
+                    <div class="adm-stat-lbl">Confirmadas</div>
+                </div>
+                <div class="adm-stat-card red">
+                    <div class="adm-stat-val" id="adm-pend">–</div>
+                    <div class="adm-stat-lbl">Pendentes</div>
+                </div>
+                <div class="adm-stat-card blue">
+                    <div class="adm-stat-val" id="adm-canc">–</div>
+                    <div class="adm-stat-lbl">Canceladas</div>
+                </div>
+            </div>
+            <div class="adm-chart-wrap">
+                <canvas id="adm-chart" width="400" height="200"></canvas>
+            </div>
+        </section>
+
+        <!-- SECTION: LOG -->
+        <section class="admin-section" id="section-log">
+            <div class="adm-log" id="adm-log">
+                <div class="log-entry">Sistema iniciado.</div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal Senha -->
+<div class="adm-overlay" id="overlay-senha" onclick="fecharSenha()"></div>
+<div class="adm-modal" id="modal-senha">
+    <div class="adm-modal-header">
+        🔐 Autenticação
+        <button onclick="fecharSenha()" class="adm-close">×</button>
     </div>
-    <script src="js/admin.js"></script>
+    <div class="adm-modal-body">
+        <p style="margin-bottom:12px;color:var(--adm-text2);font-size:13px">Introduz a senha para continuar:</p>
+        <input type="password" id="senha-input" class="adm-input" placeholder="••••••" 
+            onkeydown="if(event.key==='Enter')confirmarSenha()">
+        <div style="margin-top:4px;font-size:11px;color:var(--adm-danger)" id="senha-erro"></div>
+        <button class="adm-btn" style="margin-top:12px;width:100%" onclick="confirmarSenha()">Confirmar</button>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="adm-toast" id="adm-toast"></div>
+
+<script src="js/admin.js"></script>
 </body>
 </html>
