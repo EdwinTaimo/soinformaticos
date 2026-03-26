@@ -113,7 +113,7 @@ function parsearCSV(texto) {
         const docente = cols[2]?.replace(/"/g, '').trim() || '—';
         const statusRaw = cols[3]?.replace(/"/g, '').trim().toUpperCase() || '';
 
-        let status = 'por-confirmar', statusTexto = 'Pendente';
+        let status = 'pendente', statusTexto = 'Pendente';
         if (statusRaw === 'TRUE' || statusRaw === 'CONFIRMADA') { 
             status = 'confirmada'; 
             statusTexto = 'Confirmada'; 
