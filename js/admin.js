@@ -6,7 +6,7 @@ const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocR
 const URL_API = 'https://script.google.com/macros/s/AKfycbzId2pawzW0w_fSTuv77p9LutlcGiYmW-ff5ZMg7RM38u3p1jsTFE_NVirHr4k9uzeE/exec';
 const SENHA_MESTRA = "2026";
 const NOMES_DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
-const HORARIOS = ["07:30–09:00", "09:15–10:45", "11:00–12:30", "14:00–15:30", "15:45–17:15", "17:30–19:00", "19:15–20:45", "20:45–22:15", "07:30–09:00", "09:15–10:45"];
+const HORARIOS = ["12:00–14:25", "14:30–16:45", "12:00–14:25", "14:30–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45"];
 const MAPA_DIAS = { 0:0, 1:0, 2:1, 3:1, 4:2, 5:2, 6:3, 7:3, 8:4, 9:4 };
 
 let dadosAdmin = [];
