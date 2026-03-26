@@ -837,3 +837,12 @@ if ('Notification' in window && Notification.permission === 'default') {
 const style = document.createElement('style');
 style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
 document.head.appendChild(style);
+
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker ativo!', reg))
+            .catch(err => console.log('Erro no SW:', err));
+    });
+}
