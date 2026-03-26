@@ -3,7 +3,7 @@
    ===================================================== */
 
 const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv';
-const URL_API = 'https://script.google.com/macros/s/AKfycbzId2pawzW0w_fSTuv77p9LutlcGiYmW-ff5ZMg7RM38u3p1jsTFE_NVirHr4k9uzeE/exec';
+const URL_API = 'https://script.google.com/macros/s/AKfycbztOm8PqM2v0u_KkOHwSjBcr4aM458l6KDW8z7CViVAjFH0GUT8b9RKG_S9XyJbVlhu/exec';
 const SENHA_MESTRA = "2026";
 const NOMES_DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 const HORARIOS = ["12:00–14:25", "14:30–16:45", "12:00–14:25", "14:30–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45", "12:00–16:45"];
