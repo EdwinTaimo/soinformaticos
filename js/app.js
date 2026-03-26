@@ -77,28 +77,25 @@ function setTheme(theme, save = true) {
    CARREGAR DADOS (Google Sheets)
    ===================================================== */
 async function carregarDados() {
-    const btn = document.getElementById('btn-refresh');
-    if (btn) { btn.innerHTML = '<span class="refresh-icon" style="animation:spin 1s linear infinite;display:inline-block">🌀</span> Sync...'; btn.disabled = true; }
-
     try {
-        const resp = await fetch(URL_CSV + "&t=" + Date.now());
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        const texto = await resp.text();
-        dadosAulas = parsearCSV(texto);
-        renderizarTudo();
-        atualizarStats();
-        atualizarLastSync();
-        verificarCancelamentos();
-        mostrarToast('✅ Dados actualizados!');
-    } catch (e) {
-        console.error("Erro sync:", e);
-        const tbody = document.getElementById('tabela-body');
-        if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--danger)">⚠️ Erro ao conectar. Verifica a tua ligação à internet.</td></tr>`;
-        mostrarToast('⚠️ Erro ao sincronizar', true);
-    } finally {
-        if (btn) { btn.innerHTML = '🔄 Sync'; btn.disabled = false; }
+        const res = await fetch(URL_CSV);
+        const csvText = await res.text();
+        // Guarda para uso offline futuro
+        localStorage.setItem('cache_csv_aulas', csvText);
+        processarDados(csvText);
+    } catch (error) {
+        console.log("Modo offline: Carregando dados do cache local.");
+        const dadosLocais = localStorage.getItem('cache_csv_aulas');
+        if (dadosLocais) {
+            processarDados(dadosLocais);
+            mostrarToast("Trabalhando offline — Dados antigos");
+        } else {
+            mostrarToast("Sem conexão e sem dados em cache.", true);
+        }
     }
 }
+
+
 
 function parsearCSV(texto) {
     const linhas = texto.split(/\r?\n/).filter(l => l.trim()).slice(1);
