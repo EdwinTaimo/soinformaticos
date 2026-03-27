@@ -3,7 +3,7 @@
    ===================================================== */
 
 const URL_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR5bbbsZ3ZyyocRFjl0KRS0i7vxq8TOWpTDd3ijBTVo5kZOwkDI_GI6rfOSMPOWbkkn1U_GVbgpf95O/pub?output=csv';
-const URL_API = 'https://script.google.com/macros/s/AKfycbzZ7W82NK3yMS2z0GH5oFbwhQiyx1is-_EADys3jOe07Ytkx2COybfyp5mrKrWLZXiP/exec';
+const URL_API = 'https://script.google.com/macros/s/AKfycbz1SSR5HC_UCRAUpv26yOjoBYuwbYSkgu0sXgEZAbdJrc36494lexIFbNNre0lDihkC/exec';
 
 // A SENHA FOI REMOVIDA DAQUI. A VALIDAÇÃO É FEITA NO SERVIDOR.
 
