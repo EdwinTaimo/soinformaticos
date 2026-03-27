@@ -1,14 +1,29 @@
-# Ficheiros de Sistema
+# # Ficheiros de Sistema
 .DS_Store
 Thumbs.db
+*.tmp
+*.bak
 
 # Ficheiros temporários de edição
 *.swp
+*~
 *.log
 
-# Pastas de configuração de editores (VS Code, etc)
+# Pastas de configuração de editores e IDEs
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# Se criares um ficheiro de variáveis secretas no futuro
+# Dependências (se aplicável no futuro)
+node_modules/
+jspm_packages/
+
+# Ficheiros de variáveis secretas/ambiente local
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
